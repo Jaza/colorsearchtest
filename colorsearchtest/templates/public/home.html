@@ -1,0 +1,110 @@
+
+{% extends "layout.html" %}
+{% block content %}
+<div class="well">
+<form id="colorSearchForm" method="POST" class="form form-inline" action="{{ url_for('public.home') }}">
+  {{ form.hidden_tag() }}
+  <div class="form-group">
+    {{ form.color(placeholder="Color", class_="form-control") }}
+  </div>
+  <button type="submit" class="btn btn-default">Search</button>
+</form>
+</div>
+
+{% if color %}
+<div class="well">
+<p>Searching for matches to color:</p>
+<div style="background-color: {{ color }}; width: 100px; height: 100px; display: inline-block"></div>
+</div>
+{% endif %}
+
+<div class="row">
+
+{% if colors %}
+
+    <div class="col-sm-12">
+
+{% for c in colors %}
+<div style="background-color: {{ c.hex }}; color: {{ c.fore_color }}; width: 100%; min-height: 30px">
+</div>
+{% endfor %}
+
+    </div><!-- /.col-sm-12 -->
+
+{% endif %}
+
+{% if colors_cie2000 %}
+    <div class="col-sm-3">
+
+{% for c in colors_cie2000 %}
+<div style="background-color: {{ c.hex }}; color: {{ c.fore_color }}; width: 100%; min-height: 30px; padding: 0.5em">
+  Delta E CIE 2000: {{ '%0.4f' % c.delta_e_cie2000 }}
+</div>
+{% endfor %}
+
+    </div><!-- /.col-sm-3 -->
+{% endif %}
+
+{% if colors_cie2000_db %}
+    <div class="col-sm-3">
+
+{% for c in colors_cie2000_db %}
+<div style="background-color: {{ c.hex }}; color: {{ c.fore_color }}; width: 100%; min-height: 30px; padding: 0.5em">
+  Delta E CIE 2000 (DB): {{ '%0.4f' % c.delta_e_cie2000_db }}
+</div>
+{% endfor %}
+
+    </div><!-- /.col-sm-3 -->
+{% endif %}
+
+{% if colors_cie1976 %}
+    <div class="col-sm-3">
+
+{% for c in colors_cie1976 %}
+<div style="background-color: {{ c.hex }}; color: {{ c.fore_color }}; width: 100%; min-height: 30px; padding: 0.5em">
+  Delta E CIE 1976: {{ '%0.4f' % c.delta_e_cie1976 }}
+</div>
+{% endfor %}
+
+    </div><!-- /.col-sm-3 -->
+{% endif %}
+
+{% if colors_cie1976_db %}
+    <div class="col-sm-3">
+
+{% for c in colors_cie1976_db %}
+<div style="background-color: {{ c.hex }}; color: {{ c.fore_color }}; width: 100%; min-height: 30px; padding: 0.5em">
+  Delta E CIE 1976 (DB): {{ '%0.4f' % c.delta_e_cie1976_db }}
+</div>
+{% endfor %}
+
+    </div><!-- /.col-sm-3 -->
+{% endif %}
+
+{% if colors_cie1994 %}
+    <div class="col-sm-3">
+
+{% for c in colors_cie1994 %}
+<div style="background-color: {{ c.hex }}; color: {{ c.fore_color }}; width: 100%; min-height: 30px; padding: 0.5em">
+  Delta E CIE 1994: {{ '%0.4f' % c.delta_e_cie1994 }}
+</div>
+{% endfor %}
+
+    </div><!-- /.col-sm-3 -->
+{% endif %}
+
+{% if colors_cmc %}
+    <div class="col-sm-3">
+
+{% for c in colors_cmc %}
+<div style="background-color: {{ c.hex }}; color: {{ c.fore_color }}; width: 100%; min-height: 30px; padding: 0.5em">
+  Delta E CMC: {{ '%0.4f' % c.delta_e_cmc }}
+</div>
+{% endfor %}
+
+    </div><!-- /.col-sm-3 -->
+{% endif %}
+
+</div><!-- /.row -->
+
+{% endblock %}
