@@ -8,9 +8,13 @@ class Config(object):
     SECRET_KEY = os_env.get('COLORSEARCHTEST_SECRET', 'secret-key')  # TODO: Change me
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
-    SQLALCHEMY_DATABASE_URI = os_env.get(
-        'COLORSEARCHTEST_DATABASE_URI',
-        'postgresql://localhost/example')  # TODO: Change me
+    SQLALCHEMY_DATABASE_URI = ((os.environ.get('HEROKU') is not None)
+        and os_env.get(
+            'DATABASE_URL',
+            'postgresql://localhost/example')
+        or os_env.get(
+            'COLORSEARCHTEST_DATABASE_URI',
+            'postgresql://localhost/example')) # TODO: Change me
     BCRYPT_LOG_ROUNDS = 13
     ASSETS_DEBUG = False
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
