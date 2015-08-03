@@ -21,6 +21,7 @@ def create_app(config_object=ProdConfig):
     """
     app = Flask(__name__)
     app.config.from_object(config_object)
+    register_loggers(app)
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)
@@ -51,7 +52,7 @@ def register_errorhandlers(app):
     return None
 
 
-def register_logger(app):
+def register_loggers(app):
     if not app.debug and os.environ.get('HEROKU') is None:
         import logging
         from logging.handlers import RotatingFileHandler
