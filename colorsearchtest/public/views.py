@@ -65,8 +65,8 @@ def home():
                                           delta_e_cie1994,
                                           delta_e_cmc)
 
-        from colorsearchtest.utils import (delta_e_cie1976_query,
-                                           delta_e_cie2000_query)
+        from colorsearchtest.queries import (delta_e_cie1976_query,
+                                             delta_e_cie2000_query)
 
         c_rgb = sRGBColor.new_from_rgb_hex(color)
         c_lab = convert_color(c_rgb, LabColor)
