@@ -14,6 +14,9 @@ can also be switched to use the `python-colormath
 <https://github.com/gtaylor/python-colormath>`_ implementations, for
 baseline comparison of accuracy and performance.
 
+Here's a `demo of the app in action
+<https://colorsearchtest.herokuapp.com/>`_.
+
 
 Quickstart
 ----------
