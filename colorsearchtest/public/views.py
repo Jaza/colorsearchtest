@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
+import timeit
+
 from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session)
 from flask import current_app as app
@@ -39,6 +41,9 @@ def home():
 
     colors_cie1976_db = None
     colors_cie2000_db = None
+
+    colors_cie1976_db_elapsed = None
+    colors_cie2000_db_elapsed = None
 
     is_show_createschema_msg = False
     is_show_createcolors_msg = False
@@ -95,6 +100,8 @@ def home():
         colors = None
 
         if app.config['IS_DELTA_E_DBQUERY_ENABLED']:
+            start_time = timeit.default_timer()
+
             color_results = delta_e_cie1976_query(
                 lab_l=c_lab.lab_l,
                 lab_a=c_lab.lab_a,
@@ -108,6 +115,10 @@ def home():
                     'fore_color': ('#{:02X}{:02X}{:02X}'.format(*calc_fore_color((c[0], c[1], c[2])))),
                     'delta_e_cie1976_db': c[3]})
 
+            colors_cie1976_db_elapsed = timeit.default_timer() - start_time
+
+            start_time = timeit.default_timer()
+
             color_results = delta_e_cie2000_query(
                 lab_l=c_lab.lab_l,
                 lab_a=c_lab.lab_a,
@@ -120,6 +131,8 @@ def home():
                     'hex': '#{:02X}{:02X}{:02X}'.format(c[0], c[1], c[2]),
                     'fore_color': ('#{:02X}{:02X}{:02X}'.format(*calc_fore_color((c[0], c[1], c[2])))),
                     'delta_e_cie2000_db': c[3]})
+
+            colors_cie2000_db_elapsed = timeit.default_timer() - start_time
     else:
         colors = [{
                 'hex': str(c),
@@ -141,4 +154,6 @@ def home():
                            colors_cmc=colors_cmc,
                            colors_cie1976_db=colors_cie1976_db,
                            colors_cie2000_db=colors_cie2000_db,
+                           colors_cie1976_db_elapsed=colors_cie1976_db_elapsed,
+                           colors_cie2000_db_elapsed=colors_cie2000_db_elapsed,
                            color=color)

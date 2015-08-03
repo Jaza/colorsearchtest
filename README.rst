@@ -3,6 +3,17 @@ Color Search Test
 
 Test searching by closest color in Flask / Postgres.
 
+Closest colors are calculated and sorted using the various `Delta E
+<http://www.colorwiki.com/wiki/Delta_E:_The_Color_Difference>`_
+(CIE Lab) `color difference
+<https://en.wikipedia.org/wiki/Color_difference>`_ formulae.
+
+By default, this app uses two Delta E formulae (the 1976 and the 2000
+version) that are implemented as custom Postgres SQL functions. It
+can also be switched to use the `python-colormath
+<https://github.com/gtaylor/python-colormath>`_ implementations, for
+baseline comparison of accuracy and performance.
+
 
 Quickstart
 ----------
@@ -85,6 +96,21 @@ your choice), e.g:
 
 You can re-run this whenever you like. Each time you re-run it, the
 script will delete all existing colors and save new ones.
+
+
+Switching between SQL-based and Python-based Delta E
+----------------------------------------------------
+
+By default, the Delta E formulae to use are configured as follows:
+
+::
+
+    IS_DELTA_E_COLORMATH_ENABLED = False
+    IS_DELTA_E_DBQUERY_ENABLED = True
+
+
+These can be toggled by editing the ``colorsearchtest/settings.py``
+file.
 
 
 Deployment
