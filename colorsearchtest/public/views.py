@@ -2,18 +2,17 @@
 """Public section, including homepage and signup."""
 from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session)
+from flask import current_app as app
 
 from sqlalchemy import func
 
+from colorsearchtest.database import db
 from colorsearchtest.utils import flash_errors, calc_fore_color
 from colorsearchtest.public.forms import ColorSearchForm
 
 from colorsearchtest.models import Color
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
-
-
-MAX_COLORS = 100
 
 
 @blueprint.route("/", methods=["GET", "POST"])
@@ -28,6 +27,7 @@ def home():
             flash_errors(form)
 
     color_results = Color.query
+    max_colors = app.config['MAX_COLORS']
 
     color = None
     colors = None
@@ -40,7 +40,16 @@ def home():
     colors_cie1976_db = None
     colors_cie2000_db = None
 
-    if request.args.get('color', None):
+    is_show_createschema_msg = False
+    is_show_createcolors_msg = False
+
+    if not db.engine.dialect.has_table(db.engine.connect(), 'color'):
+        form = None
+        is_show_createschema_msg = True
+    elif (not request.args.get('color', None)) and (not color_results.count()):
+        form = None
+        is_show_createcolors_msg = True
+    elif request.args.get('color', None):
         color = '#{0}'.format(request.args.get('color'))
 
         from operator import itemgetter
@@ -57,9 +66,9 @@ def home():
         c_rgb = sRGBColor.new_from_rgb_hex(color)
         c_lab = convert_color(c_rgb, LabColor)
 
-        colors = []
+        if app.config['IS_DELTA_E_COLORMATH_ENABLED']:
+            colors = []
 
-        if 0:
             for c in color_results.all():
                 c2_lab = LabColor(lab_l=c.lab_l,
                                   lab_a=c.lab_a,
@@ -78,18 +87,19 @@ def home():
                     'delta_e_cmc': delta_e_cmc(c_lab,
                                                c2_lab)})
 
-        #colors_cie2000 = sorted(colors, key=itemgetter('delta_e_cie2000'))[:MAX_COLORS]
-        #colors_cie1976 = sorted(colors, key=itemgetter('delta_e_cie1976'))[:MAX_COLORS]
-        #colors_cie1994 = sorted(colors, key=itemgetter('delta_e_cie1994'))[:MAX_COLORS]
-        #colors_cmc = sorted(colors, key=itemgetter('delta_e_cmc'))[:MAX_COLORS]
+            colors_cie2000 = sorted(colors, key=itemgetter('delta_e_cie2000'))[:max_colors]
+            colors_cie1976 = sorted(colors, key=itemgetter('delta_e_cie1976'))[:max_colors]
+            colors_cie1994 = sorted(colors, key=itemgetter('delta_e_cie1994'))[:max_colors]
+            colors_cmc = sorted(colors, key=itemgetter('delta_e_cmc'))[:max_colors]
+
         colors = None
 
-        if 0:
+        if app.config['IS_DELTA_E_DBQUERY_ENABLED']:
             color_results = delta_e_cie1976_query(
                 lab_l=c_lab.lab_l,
                 lab_a=c_lab.lab_a,
                 lab_b=c_lab.lab_b,
-                limit=MAX_COLORS)
+                limit=max_colors)
 
             colors_cie1976_db = []
             for c in color_results:
@@ -98,12 +108,11 @@ def home():
                     'fore_color': ('#{:02X}{:02X}{:02X}'.format(*calc_fore_color((c[0], c[1], c[2])))),
                     'delta_e_cie1976_db': c[3]})
 
-        if 1:
             color_results = delta_e_cie2000_query(
                 lab_l=c_lab.lab_l,
                 lab_a=c_lab.lab_a,
                 lab_b=c_lab.lab_b,
-                limit=MAX_COLORS)
+                limit=max_colors)
 
             colors_cie2000_db = []
             for c in color_results:
@@ -118,11 +127,13 @@ def home():
                 'delta_e_cie2000': None}
             for c in color_results
                 .order_by(func.random())
-                .limit(MAX_COLORS)
+                .limit(max_colors)
                 .all()]
 
     return render_template("public/home.html",
                            form=form,
+                           is_show_createschema_msg=is_show_createschema_msg,
+                           is_show_createcolors_msg=is_show_createcolors_msg,
                            colors=colors,
                            colors_cie2000=colors_cie2000,
                            colors_cie1976=colors_cie1976,

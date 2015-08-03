@@ -7,7 +7,8 @@ Test searching by closest color in Flask / Postgres.
 Quickstart
 ----------
 
-First, set your app's secret key as an environment variable. For example, example add the following to ``.bashrc`` or ``.bash_profile``.
+First, set your app's secret key as an environment variable. For
+example, add the following to ``.bashrc`` or ``.bash_profile``.
 
 .. code-block:: bash
 
@@ -25,15 +26,6 @@ Then run the following commands to bootstrap your environment.
     python manage.py server
 
 You will see a pretty welcome screen.
-
-Once you have installed your DBMS, run the following to create your app's database tables and perform the initial migration:
-
-::
-
-    python manage.py db init
-    python manage.py db migrate
-    python manage.py db upgrade
-    python manage.py server
 
 
 Dynamic Secret Key
@@ -55,10 +47,49 @@ You can specify DB config when the app starts:
     export COLORSEARCHTEST_DATABASE_URI="postgresql://colorsearchtest:colorsearchtest@localhost:5432/colorsearchtest"; python manage.py server
 
 
+Setting up schema
+-----------------
+
+Once you have installed your DBMS, run the following if necessary
+(shouldn't be necessary), to set up the migrations:
+
+::
+
+    python manage.py db init
+    python manage.py db migrate
+
+
+Then, run the following to create your app's database tables and
+perform the initial migration:
+
+::
+
+    python manage.py db upgrade
+    python manage.py server
+
+
+Creating random colors
+----------------------
+
+To actually use colorsearchtest, you need to create a set of random
+colors in the database. To do this, run the following command,
+specifying a minimum and maximum number of colors to generate (of
+your choice), e.g:
+
+::
+
+    python manage.py createcolors 900 1000
+
+
+You can re-run this whenever you like. Each time you re-run it, the
+script will delete all existing colors and save new ones.
+
+
 Deployment
 ----------
 
-In your production environment, make sure the ``COLORSEARCHTEST_ENV`` environment variable is set to ``"prod"``.
+In your production environment, make sure the ``COLORSEARCHTEST_ENV``
+environment variable is set to ``"prod"``.
 
 
 Shell
@@ -68,7 +99,7 @@ To open the interactive shell, run ::
 
     python manage.py shell
 
-By default, you will have access to ``app``, ``db``, and the ``User`` model.
+By default, you will have access to ``app`` and ``db``.
 
 
 Running Tests
