@@ -44,3 +44,6 @@ docs/_build
 
 # Virtualenvs
 env/
+
+# Flask project-specific stuff
+log
