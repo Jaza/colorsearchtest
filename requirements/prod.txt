@@ -36,4 +36,4 @@ Flask-DebugToolbar==0.9.2
 
 # Color
 colormath==2.1.1
-yaml>=3.10
+pyyaml>=3.10
