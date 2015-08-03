@@ -37,7 +37,7 @@ class DevConfig(Config):
     ENV = 'dev'
     DEBUG = True
     DEBUG_TB_ENABLED = True
-    ASSETS_DEBUG = True  # Don't bundle/minify static assets
+    ASSETS_DEBUG = False  # Don't bundle/minify static assets
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
 
 

@@ -11,7 +11,7 @@ css = Bundle(
 
 js = Bundle(
     "libs/jQuery/dist/jquery.js",
-    "libs/bootstrap/dist/js/bootstrap.js",
+    "libs/bootstrap/dist/js/bootstrap.min.js",
     "libs/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",
     "js/plugins.js",
     "js/script.js",

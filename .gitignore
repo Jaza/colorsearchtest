@@ -47,3 +47,6 @@ env/
 
 # Flask project-specific stuff
 log
+colorsearchtest/static/img/bootstrap-colorpicker
+colorsearchtest/static/css/common.css
+colorsearchtest/static/js/common.js
