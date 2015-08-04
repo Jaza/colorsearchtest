@@ -17,6 +17,8 @@ baseline comparison of accuracy and performance.
 Here's a `demo of the app in action
 <https://colorsearchtest.herokuapp.com/>`_.
 
+I've asked for help with `improving the performance of the Delta E CIE 2000 SQL function <http://stackoverflow.com/questions/31798883/performance-of-delta-e-cie-lab-calculating-and-sorting-in-sql>`_ on StackOverflow - suggestions welcome!
+
 
 Quickstart
 ----------
