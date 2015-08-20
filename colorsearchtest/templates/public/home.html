@@ -59,6 +59,11 @@
 {% if colors_cie2000 %}
     <div class="col-sm-3">
 
+{% if colors_cie2000_elapsed %}
+<p>Time elapsed: {{ '%0.2f' % colors_cie2000_elapsed }}s</p>
+{% endif %}
+
+
 {% for c in colors_cie2000 %}
 <div style="background-color: {{ c.hex }}; color: {{ c.fore_color }}; width: 100%; min-height: 30px; padding: 0.5em">
   Delta E CIE 2000: {{ '%0.4f' % c.delta_e_cie2000 }}
@@ -87,6 +92,10 @@
 
 {% if colors_cie1976 %}
     <div class="col-sm-3">
+
+{% if colors_cie1976_elapsed %}
+<p>Time elapsed: {{ '%0.2f' % colors_cie1976_elapsed }}s</p>
+{% endif %}
 
 {% for c in colors_cie1976 %}
 <div style="background-color: {{ c.hex }}; color: {{ c.fore_color }}; width: 100%; min-height: 30px; padding: 0.5em">

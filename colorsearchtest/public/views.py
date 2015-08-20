@@ -39,6 +39,9 @@ def home():
     colors_cie1994 = None
     colors_cmc = None
 
+    colors_cie1976_elapsed = None
+    colors_cie2000_elapsed = None
+
     colors_cie1976_db = None
     colors_cie2000_db = None
 
@@ -72,7 +75,9 @@ def home():
         c_lab = convert_color(c_rgb, LabColor)
 
         if app.config['IS_DELTA_E_COLORMATH_ENABLED']:
-            colors = []
+            start_time = timeit.default_timer()
+
+            colors_cie2000_tmp = []
 
             for c in color_results.all():
                 c2_lab = LabColor(lab_l=c.lab_l,
@@ -80,22 +85,35 @@ def home():
                                   lab_b=c.lab_b,
                                   illuminant='d65')
 
-                colors.append({
+                colors_cie2000_tmp.append({
                     'hex': str(c),
                     'fore_color': ('#{:02X}{:02X}{:02X}'.format(*calc_fore_color((c.rgb_r, c.rgb_g, c.rgb_b)))),
                     'delta_e_cie2000': delta_e_cie2000(c_lab,
-                                                       c2_lab),
-                    'delta_e_cie1976': delta_e_cie1976(c_lab,
-                                                       c2_lab),
-                    'delta_e_cie1994': delta_e_cie1994(c_lab,
-                                                       c2_lab),
-                    'delta_e_cmc': delta_e_cmc(c_lab,
-                                               c2_lab)})
+                                                       c2_lab)})
 
-            colors_cie2000 = sorted(colors, key=itemgetter('delta_e_cie2000'))[:max_colors]
-            colors_cie1976 = sorted(colors, key=itemgetter('delta_e_cie1976'))[:max_colors]
-            colors_cie1994 = sorted(colors, key=itemgetter('delta_e_cie1994'))[:max_colors]
-            colors_cmc = sorted(colors, key=itemgetter('delta_e_cmc'))[:max_colors]
+            colors_cie2000 = sorted(colors_cie2000_tmp, key=itemgetter('delta_e_cie2000'))[:max_colors]
+
+            colors_cie2000_elapsed = timeit.default_timer() - start_time
+
+            start_time = timeit.default_timer()
+
+            colors_cie1976_tmp = []
+
+            for c in color_results.all():
+                c2_lab = LabColor(lab_l=c.lab_l,
+                                  lab_a=c.lab_a,
+                                  lab_b=c.lab_b,
+                                  illuminant='d65')
+
+                colors_cie1976_tmp.append({
+                    'hex': str(c),
+                    'fore_color': ('#{:02X}{:02X}{:02X}'.format(*calc_fore_color((c.rgb_r, c.rgb_g, c.rgb_b)))),
+                    'delta_e_cie1976': delta_e_cie1976(c_lab,
+                                                       c2_lab)})
+
+            colors_cie1976 = sorted(colors_cie1976_tmp, key=itemgetter('delta_e_cie1976'))[:max_colors]
+
+            colors_cie1976_elapsed = timeit.default_timer() - start_time
 
         colors = None
 
@@ -152,6 +170,8 @@ def home():
                            colors_cie1976=colors_cie1976,
                            colors_cie1994=colors_cie1994,
                            colors_cmc=colors_cmc,
+                           colors_cie1976_elapsed=colors_cie1976_elapsed,
+                           colors_cie2000_elapsed=colors_cie2000_elapsed,
                            colors_cie1976_db=colors_cie1976_db,
                            colors_cie2000_db=colors_cie2000_db,
                            colors_cie1976_db_elapsed=colors_cie1976_db_elapsed,

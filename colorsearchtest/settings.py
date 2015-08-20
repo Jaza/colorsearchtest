@@ -20,7 +20,7 @@ class Config(object):
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
-    IS_DELTA_E_COLORMATH_ENABLED = False
+    IS_DELTA_E_COLORMATH_ENABLED = True
     IS_DELTA_E_DBQUERY_ENABLED = True
     MAX_COLORS = 100
 
