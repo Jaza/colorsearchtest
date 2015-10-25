@@ -32,7 +32,7 @@ def delta_e_cie1976_query(lab_l, lab_a, lab_b, limit):
                  limit=limit)))
 
 
-def delta_e_cie2000_query(lab_l, lab_a, lab_b, kl=1.0, kc=1.0, kh=1.0, limit=10):
+def delta_e_cie2000_query(lab_l, lab_a, lab_b, kl=1.0, kc=1.0, kh=1.0, limit=10, range_threshold=20.0):
     """
     Queries the color table in the database, and sorts results
     using the Delta E CIE 2000 formula, comparing each record's Lab
@@ -282,6 +282,12 @@ def delta_e_cie2000_query(lab_l, lab_a, lab_b, kl=1.0, kc=1.0, kh=1.0, limit=10)
                 '                        :kl, :kc, :kh)'
                 '    AS de2000 '
                 'FROM          color c '
+                'WHERE         c.lab_l BETWEEN'
+                '    :lab_l_low_threshold AND :lab_l_high_threshold '
+                'AND           c.lab_a BETWEEN'
+                '    :lab_a_low_threshold AND :lab_a_high_threshold '
+                'AND           c.lab_b BETWEEN'
+                '    :lab_b_low_threshold AND :lab_b_high_threshold '
                 'ORDER BY      de2000 '
                 'LIMIT         :limit'),
             dict(lab_l=lab_l,
@@ -290,6 +296,12 @@ def delta_e_cie2000_query(lab_l, lab_a, lab_b, kl=1.0, kc=1.0, kh=1.0, limit=10)
                  kl=kl,
                  kc=kc,
                  kh=kh,
+                 lab_l_low_threshold=(lab_l - range_threshold),
+                 lab_l_high_threshold=(lab_l + range_threshold),
+                 lab_a_low_threshold=(lab_a - range_threshold),
+                 lab_a_high_threshold=(lab_a + range_threshold),
+                 lab_b_low_threshold=(lab_b - range_threshold),
+                 lab_b_high_threshold=(lab_b + range_threshold),
                  limit=limit)))
 
 
